@@ -9,6 +9,7 @@ package game;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -31,7 +32,34 @@ public class TriviaGame {
      * Creates a new TriviaGame, defaulting to the file ./default.txt
      */
     public TriviaGame(){
-        
+        currentIndex = 0;
+        questions = new ArrayList<Question>();
+        Scanner sc = new Scanner("");
+        try {
+            sc = new Scanner(new FileReader(FILE_PREFIX+"default.txt"));
+        } catch (FileNotFoundException ex) {
+            System.out.println("File |"+"default.txt"+"| not found in |"+FILE_PREFIX+"|");
+            System.exit(1);
+        }
+        sc.useDelimiter("@");
+        while(sc.hasNext()){
+            Scanner questionParser = new Scanner(sc.next());
+            questionParser.useDelimiter(" #");
+            try{
+                String q = questionParser.next();
+                String c = questionParser.next();
+                String a1 = questionParser.next();
+                String a2 = questionParser.next();
+                String a3 = questionParser.next();
+                questions.add(new Question(q,c,a1,a2,a3));
+            }
+            catch(NoSuchElementException e){
+                System.out.println("Not enough arguments in file or incorrect format\n"+
+                        "Correct format is: @[question] #[correct answer]"+
+                        " #[incorrect answer 1] #[incorrect answer 2] #[incorrect answer 3]");
+                System.exit(1);
+            }
+        }
     }
     
     /**
