@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package game;
+package GUIProj.src.game;
 
 import java.util.Random;
 
@@ -50,6 +50,7 @@ public class Question {
         for(String s:this.answers){
             if(s.equals(corAns)){
                 corAnsPos = i;
+                System.out.println("Answer at "+i);
                 break;
             }
             i++;
