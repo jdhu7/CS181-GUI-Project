@@ -22,7 +22,7 @@ import java.util.Scanner;
  */
 public class TriviaGame {
     /**Origin folder in which to look for question files*/
-    private final String FILE_PREFIX = "./";
+    private final String FILE_PREFIX = "./src/";
     /**Array of questions to be asked*/
     private ArrayList<Question> questions;
     /**Remembers current question index for use with getNextQuestion()*/
@@ -101,7 +101,7 @@ public class TriviaGame {
      * @return true if there is another question to get
      */
     public boolean hasNextQuestion(){
-        return currentIndex != questions.size()-1;
+        return currentIndex != questions.size();
     }
     
     /**
@@ -113,10 +113,28 @@ public class TriviaGame {
     }
     
     /**
+     * TODO
+     * @param ind
+     * @return 
+     */
+    public boolean checkAnswer(int ind){
+        return false;
+    }
+    
+    /**
      * For testing purposes only -- Runs game in command line.
      * @param args Unused
      */
     public static void main(String[] args){
-        Question q = new Question("What is food?","food","bricks","AC","cement");
+        TriviaGame tg = new TriviaGame();
+        while(tg.hasNextQuestion()){
+            Question qs = tg.getNextQuestion();
+            System.out.println(qs.getBody());
+            int i = 1;
+            for(String s:qs.getPossibleAnswers()){
+                System.out.println(i+": "+s);
+                i++;
+            }
+        }
     }
 }
