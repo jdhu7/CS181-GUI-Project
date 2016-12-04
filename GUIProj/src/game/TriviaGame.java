@@ -27,6 +27,8 @@ public class TriviaGame {
     private ArrayList<Question> questions;
     /**Remembers current question index for use with getNextQuestion()*/
     private int currentIndex;
+    /**Tracks player's score*/
+    private int score = 0;
     
     /**
      * Creates a new TriviaGame, defaulting to the file ./default.txt
@@ -113,11 +115,17 @@ public class TriviaGame {
     }
     
     /**
-     * TODO
-     * @param ind
-     * @return 
+     * Increments score and returns true if answer is correct, otherwise returns
+     * false
+     * @param q Question to check answer of
+     * @param ind index of answer to check
+     * @return true if correct, false otherwise
      */
-    public boolean checkAnswer(int ind){
+    public boolean checkAnswer(Question q, int ind){
+        if(q.checkAnswer(ind)){
+            score++;
+            return true;
+        }
         return false;
     }
     
