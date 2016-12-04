@@ -8,9 +8,8 @@ package game;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * I pledge my honor that I have abided by the Stevens Honor System
@@ -24,7 +23,7 @@ public class TriviaGame {
     /**Origin folder in which to look for question files*/
     private final String FILE_PREFIX = "./";
     /**Array of questions to be asked*/
-    private Question[] questions;
+    private ArrayList<Question> questions;
     /**Remembers current question index for use with getNextQuestion()*/
     private int currentIndex;
     
@@ -41,14 +40,48 @@ public class TriviaGame {
      */
     public TriviaGame(String file){
         currentIndex = 0;
-        Scanner sc;
+        questions = new ArrayList<Question>();
+        Scanner sc = new Scanner("");
         try {
             sc = new Scanner(new FileReader(FILE_PREFIX+file));
         } catch (FileNotFoundException ex) {
             System.out.println("File |"+file+"| not found in |"+FILE_PREFIX+"|");
             System.exit(1);
         }
-        
+        sc.useDelimiter("@");
+        while(sc.hasNext()){
+            Scanner questionParser = new Scanner(sc.next());
+            questionParser.useDelimiter(" #");
+            try{
+                String q = questionParser.next();
+                String c = questionParser.next();
+                String a1 = questionParser.next();
+                String a2 = questionParser.next();
+                String a3 = questionParser.next();
+                questions.add(new Question(q,c,a1,a2,a3));
+            }
+            catch(NoSuchElementException e){
+                System.out.println("Not enough arguments in file or incorrect format\n"+
+                        "Correct format is: @[question] #[correct answer]"+
+                        " #[incorrect answer 1] #[incorrect answer 2] #[incorrect answer 3]");
+                System.exit(1);
+            }
+        }
+    }
+    
+    /**
+     * @return true if there is another question to get
+     */
+    public boolean hasNextQuestion(){
+        return currentIndex != questions.size()-1;
+    }
+    
+    /**
+     * @return next Question in questions
+     */
+    public Question getNextQuestion(){
+        currentIndex++;
+        return questions.get(currentIndex-1);
     }
     
     /**
