@@ -1,3 +1,4 @@
+
 package game;
 
 import java.awt.BorderLayout;
@@ -15,9 +16,7 @@ public class Gui {
     Button[] Answers;
     int index,numCor;
     boolean Fin;
-/**
- * constructor of the gui
- */
+
     Gui(){
         GridLayout manage = new GridLayout(1,4);
         index = 0;
@@ -85,11 +84,7 @@ public class Gui {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
-    /**
-     * sets the labels and the buttons
-     * @param Quest The question
-     * @param Ans Array of answers
-     */
+
     public void setTrivia(String Quest, String[] Ans){
         Question.setText(Quest);
         for(int i=0;i<4;i++){
@@ -98,10 +93,7 @@ public class Gui {
         index = -1;
         Fin = false;
     }
-/**
- * 
- * @return check if a button has been pressed, returns the index of the button
- */
+
     public int done(){
         if(frame == null){
                 return -2;
@@ -110,16 +102,11 @@ public class Gui {
                 return index;
         }
     }
-/**
- * 
- * @return  boolean if a button has been pressed
- */
+
     public boolean check(){
         return Fin;
     }
-/**
- *  when the user has gotten a question right
- */
+
     public void right(){
         numCor++;
         Correct.setText("Amount Correct: "+numCor);

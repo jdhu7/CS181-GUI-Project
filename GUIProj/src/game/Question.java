@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package GUIProj.src.game;
+package game;
 
 import java.util.Random;
 
