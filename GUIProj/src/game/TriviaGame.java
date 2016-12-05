@@ -119,7 +119,7 @@ public class TriviaGame {
      * @return true if correct, false otherwise
      */
     public boolean checkAnswer(Question q, int ind){
-        if(q.checkAnswer(ind)){
+        if(q.checkAnswer(ind)){ 
             return true;
         }
         return false;
