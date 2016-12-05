@@ -27,8 +27,6 @@ public class TriviaGame {
     private ArrayList<Question> questions;
     /**Remembers current question index for use with getNextQuestion()*/
     private int currentIndex;
-    /**Tracks player's score*/
-    private int score = 0;
     
     /**
      * Creates a new TriviaGame, defaulting to the file ./default.txt
@@ -115,15 +113,13 @@ public class TriviaGame {
     }
     
     /**
-     * Increments score and returns true if answer is correct, otherwise returns
-     * false
+     * Returns true if answer is correct, otherwise returns false
      * @param q Question to check answer of
      * @param ind index of answer to check
      * @return true if correct, false otherwise
      */
     public boolean checkAnswer(Question q, int ind){
         if(q.checkAnswer(ind)){
-            score++;
             return true;
         }
         return false;
@@ -134,15 +130,11 @@ public class TriviaGame {
      * @param args Unused
      */
     public static void main(String[] args){
+        Gui gu = new Gui();
         TriviaGame tg = new TriviaGame();
         while(tg.hasNextQuestion()){
-            Question qs = tg.getNextQuestion();
-            System.out.println(qs.getBody());
-            int i = 1;
-            for(String s:qs.getPossibleAnswers()){
-                System.out.println(i+": "+s);
-                i++;
-            }
+            Question q = tg.getNextQuestion();
+            gu.setTrivia(q.getBody(), q.getPossibleAnswers());
         }
     }
 }
