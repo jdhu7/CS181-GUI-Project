@@ -6,8 +6,13 @@
 
 package game;
 
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -17,6 +22,8 @@ import java.util.TimerTask;
 /**
  * I pledge my honor that I have abided by the Stevens Honor System
  * -- Matthew Doto
+ * 
+ * I pledge my honor that I have abided by the Stevens Honor System
  *
  * @author mdoto
  * @version 1.0.0
@@ -69,20 +76,33 @@ public class TriviaGame {
         Timer timer = new Timer();
         TimerTask task = new TimerTask(){
         	public void run(){
-        		Question temp = q;
+        		Question temp = questions.get(currentIndex);
         		boolean flag = mainFrame.check();
-        	if(flag==true){
-        		int ans = mainFrame.done();
-        		if(main.checkAnswer(temp,ans)==true){
-        			mainFrame.right();
+            	if(flag==true){
+                	
+            		int ans = mainFrame.done();
+            		if(ans == -3){
+            			mainFrame.hide();
+            			main = new TriviaGame(mainFrame.load());
+            		}
+            		if(ans == -2){
+            			create(mainFrame);
+            			reload();
+            		}
+            		else{ if(main.checkAnswer(temp,ans)==true){
+            				mainFrame.right();
+            			}
+            			if(main.hasNextQuestion()){
+            				temp = main.getNextQuestion();
+            				mainFrame.setTrivia(temp.getBody(),temp.getPossibleAnswers());
+            			}        			
+            			else if(main.hasNextQuestion() == false){
+            				mainFrame.finish();
+            			}
+            			}
+            		}
         		}
-        		if(main.hasNextQuestion()){
-        			temp = main.getNextQuestion();
-        			mainFrame.setTrivia(q.getBody(),q.getPossibleAnswers());
-        		}
-        	}
-        	}
-       };
+        	};
        timer.schedule(task,0, 10);
     }
     /**
@@ -124,21 +144,51 @@ public class TriviaGame {
         Timer timer = new Timer();
         TimerTask task = new TimerTask(){
         	public void run(){
-        		Question temp = q;
+        		Question temp = questions.get(currentIndex);
         		boolean flag = mainFrame.check();
         	if(flag==true){
+        	
         		int ans = mainFrame.done();
-        		if(main.checkAnswer(temp,ans)==true){
-        			mainFrame.right();
+        		if(ans == -3){
+        			mainFrame.hide();
+        			main = new TriviaGame(mainFrame.load());
         		}
-        		if(main.hasNextQuestion()){
-        			temp = main.getNextQuestion();
-        			mainFrame.setTrivia(q.getBody(),q.getPossibleAnswers());
+        		if(ans == -2){
+        			create(mainFrame);
+        			reload();
         		}
-        	}
+        		else{ if(main.checkAnswer(temp,ans)==true){
+        				mainFrame.right();
+        			}
+        			if(main.hasNextQuestion()){
+        				temp = main.getNextQuestion();
+        				mainFrame.setTrivia(temp.getBody(),temp.getPossibleAnswers());
+        			}
+        			else if(main.hasNextQuestion() == false){
+        				mainFrame.finish();
+        			}
+        			}
+        		}
         	}
        };
        timer.schedule(task,0,10);
+    }
+    
+    public void create(Gui frame){
+    	try{
+    	    String fileName = frame.getName();
+    		FileWriter filewriter = new FileWriter(FILE_PREFIX+fileName,true);
+    	    BufferedWriter writer = new BufferedWriter(filewriter);
+    	    writer.append("@"+frame.inQuestion()+" ");
+    	    writer.append("#"+frame.inAnswerRight()+" ");
+    	    writer.append("#"+frame.inAnswerWrong()+" ");
+    	    writer.append("#"+frame.inAnswerWrong()+" ");
+    	    writer.append("#"+frame.inAnswerWrong()+" ");
+    	    writer.newLine();
+    	    writer.close();
+    	} catch (Exception e) {
+    	   System.out.println("There's no suitable file");
+    	}
     }
     
     /**
@@ -153,7 +203,7 @@ public class TriviaGame {
      */
     public Question getNextQuestion(){
         currentIndex++;
-        return questions.get(currentIndex-1);
+        return questions.get(currentIndex);
     }
     /**
      * 
@@ -167,11 +217,41 @@ public class TriviaGame {
          }
          return false;
     }
+    
+    public void reload(){
+        questions = new ArrayList<Question>();
+        Scanner sc = new Scanner("");
+        try {
+            sc = new Scanner(new FileReader(FILE_PREFIX+"default.txt"));
+        } catch (FileNotFoundException ex) {
+            System.out.println("File |"+"default.txt"+"| not found in |"+FILE_PREFIX+"|");
+            System.exit(1);
+        }
+        sc.useDelimiter("@");
+        while(sc.hasNext()){
+            Scanner questionParser = new Scanner(sc.next());
+            questionParser.useDelimiter(" #");
+            try{
+                String q = questionParser.next();
+                String c = questionParser.next();
+                String a1 = questionParser.next();
+                String a2 = questionParser.next();
+                String a3 = questionParser.next();
+                questions.add(new Question(q,c,a1,a2,a3));
+            }
+            catch(NoSuchElementException e){
+                System.out.println("Not enough arguments in file or incorrect format\n"+
+                        "Correct format is: @[question] #[correct answer]"+
+                        " #[incorrect answer 1] #[incorrect answer 2] #[incorrect answer 3]");
+                System.exit(1);
+            }
+        }
+    }
     /**
      * For testing purposes only -- Runs game in command line.
      * @param args Unused
      */
     public static void main(String[] args){
-       main = new TriviaGame();
+    	main = new TriviaGame();
     }
 }

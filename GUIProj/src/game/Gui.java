@@ -10,11 +10,12 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 public class Gui {
-    JPanel buttons;
+    JPanel buttons, panels, fileManage;
     JFrame frame;
     JLabel Question,Correct;
+    Button create, load;
     Button[] Answers;
-    int index,numCor;
+    int index,numCor,numAnswer;
     boolean Fin;
 
     Gui(){
@@ -23,6 +24,8 @@ public class Gui {
         Fin = false;
         numCor = 0;
 
+        panels = new JPanel(new GridLayout(2,2));
+        fileManage = new JPanel(new GridLayout(1,2));
         buttons = new JPanel(manage);
         frame = new JFrame();
         frame.setSize(400,200);
@@ -41,7 +44,6 @@ public class Gui {
                 public void actionPerformed(ActionEvent e){
                         index = 0;
                         Fin = true;
-                        System.out.println("index is "+index);
                 }
         });
         Answers[1] = new Button("Answer 2");
@@ -50,7 +52,6 @@ public class Gui {
                 public void actionPerformed(ActionEvent e){
                         index = 1;
                         Fin = true;
-                        System.out.println("index is "+index);
                 }
         });
         Answers[2] = new Button("Answer 3");
@@ -59,7 +60,6 @@ public class Gui {
                 public void actionPerformed(ActionEvent e){
                         index = 2;
                         Fin = true;
-                        System.out.println("index is "+index);
                 }
         });
         Answers[3] = new Button("Answer 4");
@@ -68,18 +68,36 @@ public class Gui {
                 public void actionPerformed(ActionEvent e){
                         index = 3;
                         Fin = true;
-                        System.out.println("index is "+index);
                 }
         });
 
-
+        create = new Button("Create a question");
+        create.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		index = -2;
+        		Fin = true;
+        	}
+        });
+        
+        load = new Button("Load a trivia set");
+        load.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e){
+        		index = -3;
+        		Fin = true;
+        	}
+        });
 
         buttons.add(Answers[0]);
         buttons.add(Answers[1]);
         buttons.add(Answers[2]);
         buttons.add(Answers[3]);
+        fileManage.add(create);
+        fileManage.add(load);
+
+        panels.add(buttons);
+        panels.add(fileManage);
         frame.add(Correct,BorderLayout.PAGE_END);
-        frame.add(buttons,BorderLayout.CENTER);
+        frame.add(panels,BorderLayout.CENTER);
         frame.add(Question,BorderLayout.PAGE_START);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
@@ -92,6 +110,7 @@ public class Gui {
         }
         index = -1;
         Fin = false;
+        numAnswer = 0;
     }
 
     public int done(){
@@ -107,8 +126,43 @@ public class Gui {
         return Fin;
     }
 
+    
+    public String inQuestion(){
+    	String question = JOptionPane.showInputDialog("Enter the question");
+    	return question;
+    }
+    
+    public String inAnswerWrong(){
+    	String answer = JOptionPane.showInputDialog("Enter 1 wrong answer");
+    	numAnswer++;
+    	if(numAnswer == 3){
+    		index = -1;
+    		Fin = false;
+    	}
+    	return answer;
+    }
+    
+    public String inAnswerRight(){
+    	String answer = JOptionPane.showInputDialog("Enter the right answer");
+    	return answer;
+    }
+    public void hide(){
+    	frame.setVisible(false);
+    }
     public void right(){
         numCor++;
         Correct.setText("Amount Correct: "+numCor);
+    }
+    public void finish(){
+    	JOptionPane.showMessageDialog(frame, "Game over...You have "+numCor+" correct");
+    	System.exit(0);
+    }
+    public String load(){
+    	String load = JOptionPane.showInputDialog("Load which trivia file?");
+    	return load;
+    }
+    public String getName(){
+    	String name = JOptionPane.showInputDialog("Edit which trivia file?");
+    	return name;
     }
 }

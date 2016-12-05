@@ -1,1 +1,5 @@
-@Hello World! #Nope #Yep #Yep #Yep
+@What is the color of the sky? #blue #red #green #orange 
+@What class is this project for? #CS 181 #MA 120 #CAL 103 #Memes 101 
+@What year is it? #2016 #2015  #1900 #3005
+@How awesome is no AC in Hayden? #I love it! #I hate Hayden #I commute #Whats a Hayden
+@Is this project awesome? #Yes! #No! #No! #No!  

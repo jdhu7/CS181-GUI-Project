@@ -50,7 +50,6 @@ public class Question {
         for(String s:this.answers){
             if(s.equals(corAns)){
                 corAnsPos = i;
-                System.out.println("Answer at "+i);
                 break;
             }
             i++;
